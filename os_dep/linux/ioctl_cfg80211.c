@@ -4911,6 +4911,7 @@ static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct ne
 
 	mon_ndev->type = ARPHRD_IEEE80211_RADIOTAP;
 	strncpy(mon_ndev->name, name, IFNAMSIZ);
+	printk("8854au: rtw_cfg80211_add_monitor_if: Copied name\n");
 	mon_ndev->name[IFNAMSIZ - 1] = 0;
 #if (LINUX_VERSION_CODE > KERNEL_VERSION(4, 11, 8))
 	mon_ndev->priv_destructor = rtw_ndev_destructor;
@@ -4927,10 +4928,12 @@ static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct ne
 	mon_ndev->set_mac_address = rtw_cfg80211_monitor_if_set_mac_address;
 #endif
 
+	printk("8854au: rtw_cfg80211_add_monitor_if: Getting private data\n");
 	pnpi = netdev_priv(mon_ndev);
 	pnpi->priv = padapter;
 	pnpi->sizeof_priv = sizeof(_adapter);
 
+	printk("8854au: rtw_cfg80211_add_monitor_if: Alloc wdev\n");
 	/*  wdev */
 	mon_wdev = (struct wireless_dev *)rtw_zmalloc(sizeof(struct wireless_dev));
 	if (!mon_wdev) {
@@ -4944,14 +4947,18 @@ static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct ne
 	mon_wdev->iftype = NL80211_IFTYPE_MONITOR;
 	mon_ndev->ieee80211_ptr = mon_wdev;
 
+	printk("8854au: rtw_cfg80211_add_monitor_if: Registering netdev\n");
 	ret = register_netdevice(mon_ndev);
 	if (ret)
 		goto out;
 
 	*ndev = pwdev_priv->pmon_ndev = mon_ndev;
+
+	printk("8854au: rtw_cfg80211_add_monitor_if: Copying name to private wdev\n");
 	_rtw_memcpy(pwdev_priv->ifname_mon, name, IFNAMSIZ + 1);
 
 out:
+	printk("8854au: rtw_cfg80211_add_monitor_if: Entering out\n");
 	if (ret && mon_wdev) {
 		rtw_mfree((u8 *)mon_wdev, sizeof(struct wireless_dev));
 		mon_wdev = NULL;
@@ -4962,6 +4969,7 @@ out:
 		*ndev = mon_ndev = NULL;
 	}
 
+	printk("8854au: rtw_cfg80211_add_monitor_if: Returning\n");
 	return ret;
 }
 
