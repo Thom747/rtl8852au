@@ -15,6 +15,7 @@
 #define  _IOCTL_CFG80211_C_
 
 #include <drv_types.h>
+#include <linux/printk.h>
 
 #ifdef CONFIG_IOCTL_CFG80211
 
@@ -4875,8 +4876,11 @@ static const struct net_device_ops rtw_cfg80211_monitor_if_ops = {
 };
 #endif
 
+// THOM: Literally says to add a monitor interface
 static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct net_device **ndev)
 {
+	
+	printk("8854au: Entering rtw_cfg80211_add_monitor_if\n");
 	int ret = 0;
 	struct net_device *mon_ndev = NULL;
 	struct wireless_dev *mon_wdev = NULL;
@@ -4959,6 +4963,7 @@ out:
 	return ret;
 }
 
+// THOM: Add virtual interface
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0))
 static struct wireless_dev *
 #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 38)) || defined(COMPAT_KERNEL_RELEASE)
@@ -4982,6 +4987,7 @@ static int
 		#endif
 		struct vif_params *params)
 {
+	printk("8854au: Entering cfg80211_rtw_add_virtual_intf\n");
 	int ret = 0;
 	struct wireless_dev *wdev = NULL;
 	struct net_device *ndev = NULL;
@@ -10215,6 +10221,7 @@ struct cfg80211_ops rtw_cfg80211_ops = {
 	.del_pmksa = cfg80211_rtw_del_pmksa,
 	.flush_pmksa = cfg80211_rtw_flush_pmksa,
 
+// THOM: Why only for APs?
 #ifdef CONFIG_AP_MODE
 	.add_virtual_intf = cfg80211_rtw_add_virtual_intf,
 	.del_virtual_intf = cfg80211_rtw_del_virtual_intf,
