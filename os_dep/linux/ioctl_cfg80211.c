@@ -4887,6 +4887,7 @@ static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct ne
 	struct rtw_netdev_priv_indicator *pnpi;
 	struct rtw_wdev_priv *pwdev_priv = adapter_wdev_data(padapter);
 
+	printk("8854au: rtw_cfg80211_add_monitor_if: Created vars\n");
 	if (!name) {
 		RTW_INFO(FUNC_ADPT_FMT" without specific name\n", FUNC_ADPT_ARG(padapter));
 		ret = -EINVAL;
@@ -4906,6 +4907,7 @@ static int rtw_cfg80211_add_monitor_if(_adapter *padapter, char *name, struct ne
 		ret = -ENOMEM;
 		goto out;
 	}
+	printk("8854au: rtw_cfg80211_add_monitor_if: Checked vars\n");
 
 	mon_ndev->type = ARPHRD_IEEE80211_RADIOTAP;
 	strncpy(mon_ndev->name, name, IFNAMSIZ);
